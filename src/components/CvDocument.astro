@@ -1,0 +1,189 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/Section.astro';
+import JobEntry from '../components/JobEntry.astro';
+import ProjectEntry from '../components/ProjectEntry.astro';
+import DownloadIcon from '../components/DownloadIcon.astro';
+import { localePath, type CvContent, type Locale } from '../data/cv';
+
+interface Props {
+  cv: CvContent;
+}
+
+const { cv } = Astro.props;
+
+const langName: Record<Locale, string> = {
+  en: 'English',
+  es: 'Español',
+};
+
+const currentPath = localePath[cv.locale];
+const year = new Date().getFullYear();
+---
+
+<BaseLayout
+  htmlLang={cv.htmlLang}
+  title={cv.meta.title}
+  description={cv.meta.description}
+  canonicalPath={currentPath}
+  ogLocale={cv.meta.ogLocale}
+  ogLocaleAlternate={cv.meta.ogLocaleAlternate}
+  skipToContent={cv.labels.skipToContent}
+>
+  <div class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href={currentPath} aria-label={cv.profile.name}>
+        <span class="brand__mark" aria-hidden="true">LC</span>
+        <span class="brand__text">{cv.profile.name}</span>
+      </a>
+
+      <div class="topbar__actions">
+        <nav class="lang" aria-label={cv.labels.languageSwitcher}>
+          <a
+            class="lang__link"
+            href={localePath.en}
+            hreflang="en"
+            aria-label={langName.en}
+            aria-current={cv.locale === 'en' ? 'page' : undefined}>EN</a
+          >
+          <a
+            class="lang__link"
+            href={localePath.es}
+            hreflang="es"
+            aria-label={langName.es}
+            aria-current={cv.locale === 'es' ? 'page' : undefined}>ES</a
+          >
+        </nav>
+
+        <a
+          class="btn btn--compact"
+          href={cv.download.href}
+          download={cv.download.filename}
+          aria-label={cv.labels.downloadAria}
+        >
+          <span class="btn__label">{cv.labels.download}</span>
+          <DownloadIcon />
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <main id="main" class="page">
+    <header class="hero">
+      <p class="eyebrow">Curriculum Vitae</p>
+      <h1>{cv.profile.name}</h1>
+      <p class="hero__role">{cv.profile.role}</p>
+      <p class="hero__summary">{cv.profile.summary}</p>
+
+      <ul class="contact">
+        {
+          cv.profile.contact.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                title={item.label}
+                target={item.href.startsWith('http') ? '_blank' : undefined}
+                rel={item.href.startsWith('http') ? 'me noopener noreferrer' : undefined}
+              >
+                {item.value}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="hero__actions">
+        <a
+          class="btn"
+          href={cv.download.href}
+          download={cv.download.filename}
+          aria-label={cv.labels.downloadAria}
+        >
+          {cv.labels.download}
+          <DownloadIcon />
+        </a>
+        <span class="hint">{cv.labels.downloadMeta}</span>
+      </div>
+    </header>
+
+    <Section id="experience" num="01" title={cv.labels.experience}>
+      {cv.experience.map((job) => <JobEntry job={job} />)}
+    </Section>
+
+    <Section id="projects" num="02" title={cv.labels.projects}>
+      {
+        cv.projects.map((project) => (
+          <ProjectEntry project={project} stackLabel={cv.labels.stackPrefix} />
+        ))
+      }
+    </Section>
+
+    <Section id="education" num="03" title={cv.labels.education}>
+      {
+        cv.education.map((entry) => (
+          <div class="edu">
+            <p class="edu__inst">{entry.institution}</p>
+            <p class="edu__program">{entry.program}</p>
+          </div>
+        ))
+      }
+    </Section>
+
+    <Section id="stack" num="04" title={cv.labels.stack}>
+      <dl class="stack">
+        {
+          cv.stack.map((group) => (
+            <div class="stack__row">
+              <dt class="stack__label">{group.label}</dt>
+              <dd class="stack__items">
+                {group.items.map((item) => <span class="chip">{item}</span>)}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </Section>
+
+    <Section id="languages" num="05" title={cv.labels.languages}>
+      <dl class="pairs">
+        {
+          cv.languages.map((language) => (
+            <div class="pair">
+              <dt class="pair__name">{language.name}</dt>
+              <dd class="pair__value">{language.level}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </Section>
+
+    <Section id="references" num="06" title={cv.labels.references}>
+      <p class="references">{cv.references}</p>
+    </Section>
+
+    <section class="cta" aria-labelledby="cta-title">
+      <div>
+        <h2 class="cta__title" id="cta-title">{cv.labels.downloadTitle}</h2>
+        <p class="cta__body">{cv.labels.downloadBody}</p>
+      </div>
+      <a
+        class="btn"
+        href={cv.download.href}
+        download={cv.download.filename}
+        aria-label={cv.labels.downloadAria}
+      >
+        {cv.labels.downloadCta}
+        <DownloadIcon />
+      </a>
+    </section>
+
+    <footer class="footer">
+      <p>© {year} Lucas Casco</p>
+      <p>
+        <a href="https://lucasco.dev" rel="me noopener" target="_blank">lucasco.dev</a>
+        {' · '}
+        {cv.labels.footerBuilt}
+      </p>
+    </footer>
+  </main>
+</BaseLayout>

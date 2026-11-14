@@ -1,0 +1,62 @@
+---
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+
+interface Props {
+  htmlLang: string;
+  title: string;
+  description: string;
+  canonicalPath: string;
+  ogLocale: string;
+  ogLocaleAlternate: string;
+  skipToContent: string;
+}
+
+const {
+  htmlLang,
+  title,
+  description,
+  canonicalPath,
+  ogLocale,
+  ogLocaleAlternate,
+  skipToContent,
+} = Astro.props;
+
+const site = Astro.site ?? new URL('https://cv.lucasco.dev');
+const canonical = new URL(canonicalPath, site);
+const alternateEn = new URL('/', site);
+const alternateEs = new URL('/es/', site);
+---
+
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#fbfaf6" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="alternate" hreflang="en" href={alternateEn.href} />
+    <link rel="alternate" hreflang="es" href={alternateEs.href} />
+    <link rel="alternate" hreflang="x-default" href={alternateEn.href} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lucas Casco — CV" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogLocaleAlternate} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+  </head>
+  <body>
+    <a class="skip" href="#main">{skipToContent}</a>
+    <slot />
+  </body>
+</html>

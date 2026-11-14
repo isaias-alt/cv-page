@@ -1,0 +1,44 @@
+---
+import type { Job } from '../data/cv';
+
+interface Props {
+  job: Job;
+}
+
+const { job } = Astro.props;
+---
+
+<article class="job">
+  <header class="job__head">
+    <h3 class="job__company">{job.company}</h3>
+    {job.position && <span class="job__position">{job.position}</span>}
+    <span class="period">{job.period}</span>
+  </header>
+
+  {
+    job.roles?.map((role) => (
+      <div class="role">
+        <div class="role__head">
+          <span class="role__org">{role.org}</span>
+          <span class="role__focus">{role.focus}</span>
+          <span class="period">{role.period}</span>
+        </div>
+        <ul class="bullets">
+          {role.bullets.map((bullet) => (
+            <li>{bullet}</li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+
+  {
+    job.bullets && (
+      <ul class="bullets bullets--top">
+        {job.bullets.map((bullet) => (
+          <li>{bullet}</li>
+        ))}
+      </ul>
+    )
+  }
+</article>

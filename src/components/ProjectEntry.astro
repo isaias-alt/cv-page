@@ -1,0 +1,44 @@
+---
+import type { Project } from '../data/cv';
+
+interface Props {
+  project: Project;
+  stackLabel: string;
+}
+
+const { project, stackLabel } = Astro.props;
+---
+
+<article class="project">
+  <header class="project__head">
+    <h3 class="project__name">{project.name}</h3>
+    <span class="project__subtitle">{project.subtitle}</span>
+    <a
+      class="project__link"
+      href={project.href}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {project.domain}
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M7 17 17 7" />
+        <path d="M7 7h10v10" />
+      </svg>
+    </a>
+  </header>
+
+  <ul class="bullets">
+    {project.bullets.map((bullet) => <li>{bullet}</li>)}
+  </ul>
+
+  <p class="stackline">{stackLabel}: <span>{project.stack}</span></p>
+</article>

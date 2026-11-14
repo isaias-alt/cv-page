@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  htmlLang="en"
+  title="Page not found — Lucas Casco"
+  description="This page does not exist. Go back to the CV."
+  canonicalPath="/404/"
+  ogLocale="en_US"
+  ogLocaleAlternate="es_PY"
+  skipToContent="Skip to content"
+>
+  <main id="main" class="page notfound">
+    <p class="eyebrow">404</p>
+    <h1>Page not found</h1>
+    <p class="notfound__body">
+      The page you are looking for does not exist. The CV is available in both
+      languages.
+    </p>
+    <p class="notfound__body">
+      La página que buscás no existe. El CV está disponible en los dos idiomas.
+    </p>
+    <div class="notfound__actions">
+      <a class="btn" href="/">English CV</a>
+      <a class="btn btn--ghost" href="/es/">CV en español</a>
+    </div>
+  </main>
+</BaseLayout>
