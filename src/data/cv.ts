@@ -89,7 +89,7 @@ const en: CvContent = {
   locale: 'en',
   htmlLang: 'en',
   meta: {
-    title: 'Lucas Casco — CV · Fullstack Software Engineer',
+    title: 'CV - Lucas Casco',
     description:
       'CV of Lucas Isaias Casco, fullstack software engineer from Paraguay with a backend focus: banking and fintech systems, Node.js and Nest.js APIs, and AI agent orchestration. Available in English and Spanish.',
     ogLocale: 'en_US',
@@ -281,7 +281,7 @@ const es: CvContent = {
   locale: 'es',
   htmlLang: 'es',
   meta: {
-    title: 'Lucas Casco — CV · Ingeniero de Software Fullstack',
+    title: 'CV - Lucas Casco',
     description:
       'CV de Lucas Isaias Casco, ingeniero de software fullstack de Paraguay con foco en backend: sistemas de banca y fintech, APIs con Node.js y Nest.js, y orquestación de agentes de IA. Disponible en inglés y español.',
     ogLocale: 'es_PY',
