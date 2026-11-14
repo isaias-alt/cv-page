@@ -1,189 +1,213 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Section from '../components/Section.astro';
-import JobEntry from '../components/JobEntry.astro';
-import ProjectEntry from '../components/ProjectEntry.astro';
-import DownloadIcon from '../components/DownloadIcon.astro';
+import CvSection from './CvSection.astro';
+import DownloadIcon from './DownloadIcon.astro';
 import { localePath, type CvContent, type Locale } from '../data/cv';
 
 interface Props {
-  cv: CvContent;
+  content: CvContent;
 }
 
-const { cv } = Astro.props;
+const { content } = Astro.props;
 
-const langName: Record<Locale, string> = {
+const langLabels: Record<Locale, string> = {
   en: 'English',
   es: 'Español',
 };
 
-const currentPath = localePath[cv.locale];
-const year = new Date().getFullYear();
+const currentPath = localePath[content.locale];
 ---
 
 <BaseLayout
-  htmlLang={cv.htmlLang}
-  title={cv.meta.title}
-  description={cv.meta.description}
+  htmlLang={content.htmlLang}
+  title={content.meta.title}
+  description={content.meta.description}
   canonicalPath={currentPath}
-  ogLocale={cv.meta.ogLocale}
-  ogLocaleAlternate={cv.meta.ogLocaleAlternate}
-  skipToContent={cv.labels.skipToContent}
+  ogLocale={content.meta.ogLocale}
+  ogLocaleAlternate={content.meta.ogLocaleAlternate}
+  skipToContent={content.labels.skipToContent}
 >
-  <div class="topbar">
-    <div class="topbar__inner">
-      <a class="brand" href={currentPath} aria-label={cv.profile.name}>
-        <span class="brand__mark" aria-hidden="true">LC</span>
-        <span class="brand__text">{cv.profile.name}</span>
-      </a>
+  <div class="viewer">
+    <div class="viewer-bar">
+      <span class="viewer-label">CV</span>
 
-      <div class="topbar__actions">
-        <nav class="lang" aria-label={cv.labels.languageSwitcher}>
+      <div class="viewer-actions">
+        <nav class="langs" aria-label={content.labels.languageSwitcher}>
           <a
-            class="lang__link"
             href={localePath.en}
             hreflang="en"
-            aria-label={langName.en}
-            aria-current={cv.locale === 'en' ? 'page' : undefined}>EN</a
+            aria-label={langLabels.en}
+            aria-current={content.locale === 'en' ? 'page' : undefined}>EN</a
           >
           <a
-            class="lang__link"
             href={localePath.es}
             hreflang="es"
-            aria-label={langName.es}
-            aria-current={cv.locale === 'es' ? 'page' : undefined}>ES</a
+            aria-label={langLabels.es}
+            aria-current={content.locale === 'es' ? 'page' : undefined}>ES</a
           >
         </nav>
 
+        <span class="bar-sep" aria-hidden="true"></span>
+
         <a
-          class="btn btn--compact"
-          href={cv.download.href}
-          download={cv.download.filename}
-          aria-label={cv.labels.downloadAria}
+          class="dl"
+          href={content.download.href}
+          download={content.download.filename}
+          aria-label={content.labels.downloadAria}
         >
-          <span class="btn__label">{cv.labels.download}</span>
-          <DownloadIcon />
+          {content.labels.download}
+          <DownloadIcon size={11} />
         </a>
       </div>
     </div>
-  </div>
 
-  <main id="main" class="page">
-    <header class="hero">
-      <p class="eyebrow">Curriculum Vitae</p>
-      <h1>{cv.profile.name}</h1>
-      <p class="hero__role">{cv.profile.role}</p>
-      <p class="hero__summary">{cv.profile.summary}</p>
+    <main id="main" class="doc">
+      <article class="sheet" aria-label={content.labels.pageOne}>
+        <header class="cv-head">
+          <h1 class="cv-name">{content.profile.name}</h1>
+          <p class="cv-contact">
+            {
+              content.profile.contact.map((item, index) => (
+                <>
+                  {index > 0 && <span class="cv-sep" aria-hidden="true"> · </span>}
+                  <a
+                    href={item.href}
+                    title={item.label}
+                    target={item.href.startsWith('http') ? '_blank' : undefined}
+                    rel={item.href.startsWith('http')
+                      ? 'me noopener noreferrer'
+                      : undefined}
+                  >
+                    {item.value}
+                  </a>
+                </>
+              ))
+            }
+          </p>
+        </header>
 
-      <ul class="contact">
-        {
-          cv.profile.contact.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                title={item.label}
-                target={item.href.startsWith('http') ? '_blank' : undefined}
-                rel={item.href.startsWith('http') ? 'me noopener noreferrer' : undefined}
-              >
-                {item.value}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+        <p class="cv-summary">{content.profile.summary}</p>
 
-      <div class="hero__actions">
-        <a
-          class="btn"
-          href={cv.download.href}
-          download={cv.download.filename}
-          aria-label={cv.labels.downloadAria}
-        >
-          {cv.labels.download}
-          <DownloadIcon />
-        </a>
-        <span class="hint">{cv.labels.downloadMeta}</span>
-      </div>
-    </header>
+        <CvSection title={content.labels.experience}>
+          {
+            content.experience.map((job) => (
+              <div class="entry">
+                <div class="entry__head">
+                  <h3 class="entry__title">{job.title}</h3>
+                  <p class="entry__dates">{job.period}</p>
+                </div>
 
-    <Section id="experience" num="01" title={cv.labels.experience}>
-      {cv.experience.map((job) => <JobEntry job={job} />)}
-    </Section>
+                {job.roles?.map((role) => (
+                  <div class="subentry">
+                    <div class="entry__head">
+                      <h4 class="entry__subtitle">{role.title}</h4>
+                      <p class="entry__dates">{role.period}</p>
+                    </div>
+                    <ul class="cv-list">
+                      {role.bullets.map((bullet) => (
+                        <li>{bullet}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
 
-    <Section id="projects" num="02" title={cv.labels.projects}>
-      {
-        cv.projects.map((project) => (
-          <ProjectEntry project={project} stackLabel={cv.labels.stackPrefix} />
-        ))
-      }
-    </Section>
+                {job.bullets && (
+                  <ul class="cv-list">
+                    {job.bullets.map((bullet) => (
+                      <li>{bullet}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))
+          }
+        </CvSection>
+      </article>
 
-    <Section id="education" num="03" title={cv.labels.education}>
-      {
-        cv.education.map((entry) => (
-          <div class="edu">
-            <p class="edu__inst">{entry.institution}</p>
-            <p class="edu__program">{entry.program}</p>
-          </div>
-        ))
-      }
-    </Section>
+      <article class="sheet" aria-label={content.labels.pageTwo}>
+        <CvSection title={content.labels.projects}>
+          {
+            content.projects.map((project) => (
+              <div class="project">
+                <h3 class="project__title">
+                  {project.name} - {project.subtitle} (<a
+                    class="project__link"
+                    href={project.href}
+                    target="_blank"
+                    rel="noopener noreferrer">{project.domain}</a
+                  >)
+                </h3>
+                <ul class="cv-list">
+                  {project.bullets.map((bullet) => (
+                    <li>{bullet}</li>
+                  ))}
+                </ul>
+                <p class="project__stack">
+                  {
+                    content.projectStackBold ? (
+                      <strong>
+                        {content.labels.stackPrefix}: {project.stack}
+                      </strong>
+                    ) : (
+                      <>
+                        <strong>{content.labels.stackPrefix}:</strong> {project.stack}
+                      </>
+                    )
+                  }
+                </p>
+              </div>
+            ))
+          }
+        </CvSection>
 
-    <Section id="stack" num="04" title={cv.labels.stack}>
-      <dl class="stack">
-        {
-          cv.stack.map((group) => (
-            <div class="stack__row">
-              <dt class="stack__label">{group.label}</dt>
-              <dd class="stack__items">
-                {group.items.map((item) => <span class="chip">{item}</span>)}
-              </dd>
-            </div>
-          ))
-        }
-      </dl>
-    </Section>
+        <CvSection title={content.labels.education}>
+          {
+            content.education.map((entry) => (
+              <div class="edu">
+                <h3 class="edu__title">{entry.institution}</h3>
+                <ul class="cv-list">
+                  <li>{entry.program}</li>
+                </ul>
+              </div>
+            ))
+          }
+        </CvSection>
 
-    <Section id="languages" num="05" title={cv.labels.languages}>
-      <dl class="pairs">
-        {
-          cv.languages.map((language) => (
-            <div class="pair">
-              <dt class="pair__name">{language.name}</dt>
-              <dd class="pair__value">{language.level}</dd>
-            </div>
-          ))
-        }
-      </dl>
-    </Section>
+        <CvSection title={content.labels.stack}>
+          <ul class="cv-list">
+            {
+              content.stack.map((group) => (
+                <li>{group.label}: {group.items.join(', ')}</li>
+              ))
+            }
+          </ul>
+        </CvSection>
 
-    <Section id="references" num="06" title={cv.labels.references}>
-      <p class="references">{cv.references}</p>
-    </Section>
+        <CvSection title={content.labels.languages}>
+          <ul class="cv-list">
+            {
+              content.languages.map((language) => (
+                <li>{language.name}: {language.level}</li>
+              ))
+            }
+          </ul>
+        </CvSection>
 
-    <section class="cta" aria-labelledby="cta-title">
-      <div>
-        <h2 class="cta__title" id="cta-title">{cv.labels.downloadTitle}</h2>
-        <p class="cta__body">{cv.labels.downloadBody}</p>
-      </div>
+        <CvSection title={content.labels.references}>
+          <ul class="cv-list">
+            <li>{content.references}</li>
+          </ul>
+        </CvSection>
+      </article>
+    </main>
+
+    <p class="viewer-foot">
       <a
-        class="btn"
-        href={cv.download.href}
-        download={cv.download.filename}
-        aria-label={cv.labels.downloadAria}
+        href={content.download.href}
+        download={content.download.filename}>{content.labels.downloadCta}</a
       >
-        {cv.labels.downloadCta}
-        <DownloadIcon />
-      </a>
-    </section>
-
-    <footer class="footer">
-      <p>© {year} Lucas Casco</p>
-      <p>
-        <a href="https://lucasco.dev" rel="me noopener" target="_blank">lucasco.dev</a>
-        {' · '}
-        {cv.labels.footerBuilt}
-      </p>
-    </footer>
-  </main>
+      <span aria-hidden="true"> · </span>
+      <span>{content.labels.downloadMeta}</span>
+    </p>
+  </div>
 </BaseLayout>

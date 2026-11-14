@@ -6,18 +6,16 @@ export interface ContactLink {
   href: string;
 }
 
-export interface SubRole {
-  org: string;
-  focus: string;
+export interface Role {
+  title: string;
   period: string;
   bullets: string[];
 }
 
 export interface Job {
-  company: string;
-  position?: string;
+  title: string;
   period: string;
-  roles?: SubRole[];
+  roles?: Role[];
   bullets?: string[];
 }
 
@@ -45,7 +43,10 @@ export interface CvLabels {
   download: string;
   downloadAria: string;
   downloadMeta: string;
+  downloadCta: string;
   languageSwitcher: string;
+  pageOne: string;
+  pageTwo: string;
   experience: string;
   projects: string;
   education: string;
@@ -53,10 +54,6 @@ export interface CvLabels {
   languages: string;
   references: string;
   stackPrefix: string;
-  downloadTitle: string;
-  downloadBody: string;
-  downloadCta: string;
-  footerBuilt: string;
 }
 
 export interface CvContent {
@@ -73,9 +70,10 @@ export interface CvContent {
     href: string;
     filename: string;
   };
+  /** The source PDFs differ: EN bolds only the "Stack:" label, ES bolds the whole line. */
+  projectStackBold: boolean;
   profile: {
     name: string;
-    role: string;
     summary: string;
     contact: ContactLink[];
   };
@@ -99,29 +97,28 @@ const en: CvContent = {
   },
   labels: {
     skipToContent: 'Skip to content',
-    download: 'Download CV',
+    download: 'Download PDF',
     downloadAria: 'Download the CV in English as a PDF',
-    downloadMeta: 'PDF · 2 pages',
+    downloadMeta: 'A4 · 2 pages',
+    downloadCta: 'Download PDF',
     languageSwitcher: 'Language',
-    experience: 'Experience',
+    pageOne: 'Page 1 of 2',
+    pageTwo: 'Page 2 of 2',
+    experience: 'Professional Experience',
     projects: 'Projects',
     education: 'Education',
     stack: 'Tech Stack',
     languages: 'Languages',
     references: 'References',
     stackPrefix: 'Stack',
-    downloadTitle: 'Also available as PDF',
-    downloadBody: 'Download this same version as a PDF, ready to send or print.',
-    downloadCta: 'Download the PDF',
-    footerBuilt: 'Built with Astro',
   },
   download: {
     href: '/cv/lucas-casco-cv-en.pdf',
     filename: 'Lucas-Casco-CV-EN.pdf',
   },
+  projectStackBold: false,
   profile: {
     name: 'Lucas Isaias Casco',
-    role: 'Fullstack Software Engineer',
     summary:
       'Fullstack Software Engineer from Paraguay with a backend focus and 5 years of experience building systems in banking, fintech, and my own products. I design and build APIs and services with Node.js and Nest.js, integrate with existing systems, and work on authentication and critical flows with idempotency. I use AI coding agents daily, including a CLI I built to orchestrate them.',
     contact: [
@@ -149,14 +146,12 @@ const en: CvContent = {
   },
   experience: [
     {
-      company: 'SODEP S.A',
-      position: 'Software Engineer',
-      period: 'November 2024 – July 2026',
+      title: 'Software Engineer - SODEP S.A',
+      period: 'November 2024 - July 2026',
       roles: [
         {
-          org: 'Fintech Inversiones - Aquí Pago',
-          focus: 'Module “Mi Tienda”',
-          period: 'March 2026 – July 2026',
+          title: 'Fintech Inversiones - Aquí Pago (Module “Mi Tienda”)',
+          period: 'March 2026 - July 2026',
           bullets: [
             'Implemented a shared session module between Posweb (PHP) and Mi Tienda (Next.js), integrating with the existing middleware to enable unified access without re-login',
             'Built a Next.js module integrated as a microfrontend into an existing PHP application',
@@ -165,9 +160,8 @@ const en: CvContent = {
           ],
         },
         {
-          org: 'Banco Basa',
-          focus: 'Banking CRM',
-          period: 'April 2025 – February 2026',
+          title: 'Banco Basa - Banking CRM',
+          period: 'April 2025 - February 2026',
           bullets: [
             'Integrated with banking APIs through a Fastify proxy server responsible for authentication and request/response encryption',
             'Implemented idempotency keys with Redis to prevent duplicate records in critical onboarding flows',
@@ -178,9 +172,8 @@ const en: CvContent = {
           ],
         },
         {
-          org: 'Banco Interfisa',
-          focus: 'Business Banking Platform',
-          period: 'November 2024 – April 2025',
+          title: 'Banco Interfisa - Business Banking Platform',
+          period: 'November 2024 - April 2025',
           bullets: [
             'Built frontend features for high-complexity business banking flows: loan payments, transaction history, and vendor management',
           ],
@@ -188,8 +181,8 @@ const en: CvContent = {
       ],
     },
     {
-      company: 'Freelance',
-      period: 'June 2021 – November 2024',
+      title: 'Freelance',
+      period: 'June 2021 - November 2024',
       bullets: [
         'Integrated payment gateways (Stripe, Bancard, Pagopar) into client applications, including checkout flows and payment confirmation webhooks',
         'Built web solutions for clients under NDAs using React, Next.js, and Node.js across different domains',
@@ -281,7 +274,7 @@ const en: CvContent = {
     { name: 'Spanish', level: 'Native' },
     { name: 'English', level: 'Intermediate' },
   ],
-  references: 'References upon request.',
+  references: 'References upon request',
 };
 
 const es: CvContent = {
@@ -296,29 +289,28 @@ const es: CvContent = {
   },
   labels: {
     skipToContent: 'Saltar al contenido',
-    download: 'Descargar CV',
+    download: 'Descargar PDF',
     downloadAria: 'Descargar el CV en español en PDF',
-    downloadMeta: 'PDF · 2 páginas',
+    downloadMeta: 'A4 · 2 páginas',
+    downloadCta: 'Descargar PDF',
     languageSwitcher: 'Idioma',
-    experience: 'Experiencia',
+    pageOne: 'Página 1 de 2',
+    pageTwo: 'Página 2 de 2',
+    experience: 'Experiencia Profesional',
     projects: 'Proyectos',
     education: 'Educación',
     stack: 'Stack técnico',
     languages: 'Idiomas',
     references: 'Referencias',
     stackPrefix: 'Stack',
-    downloadTitle: 'También en PDF',
-    downloadBody: 'Descarga esta misma versión en PDF, lista para enviar o imprimir.',
-    downloadCta: 'Descargar el PDF',
-    footerBuilt: 'Hecho con Astro',
   },
   download: {
     href: '/cv/lucas-casco-cv-es.pdf',
     filename: 'Lucas-Casco-CV-ES.pdf',
   },
+  projectStackBold: true,
   profile: {
     name: 'Lucas Isaias Casco',
-    role: 'Ingeniero de Software Fullstack',
     summary:
       'Ingeniero de Software Fullstack de Paraguay con foco en backend y 5 años de experiencia construyendo sistemas en banca, fintech y productos propios. Diseño e implemento APIs y servicios con Node.js y Nest.js, integro sistemas existentes y trabajo en autenticación y flujos críticos con idempotencia. Uso agentes de código con IA a diario, incluido un CLI que construí para orquestarlos.',
     contact: [
@@ -346,14 +338,12 @@ const es: CvContent = {
   },
   experience: [
     {
-      company: 'SODEP S.A',
-      position: 'Ingeniero de Software',
-      period: 'Noviembre 2024 – Julio 2026',
+      title: 'Ingeniero de Software - SODEP S.A',
+      period: 'Noviembre 2024 - Julio 2026',
       roles: [
         {
-          org: 'Fintech Inversiones - Aquí Pago',
-          focus: 'Módulo “Mi Tienda”',
-          period: 'Marzo 2026 – Julio 2026',
+          title: 'Fintech Inversiones - Aquí Pago (Módulo “Mi Tienda”)',
+          period: 'Marzo 2026 - Julio 2026',
           bullets: [
             'Implementación de un módulo de sesión compartida entre Posweb (PHP) y Mi Tienda (Next.js), integrándome al middleware existente para habilitar acceso unificado sin re-login',
             'Desarrollo de un módulo en Next.js incorporado como microfrontend a una aplicación existente en PHP',
@@ -362,9 +352,8 @@ const es: CvContent = {
           ],
         },
         {
-          org: 'Banco Basa',
-          focus: 'CRM Bancario',
-          period: 'Abril 2025 – Febrero 2026',
+          title: 'Banco Basa - CRM Bancario',
+          period: 'Abril 2025 - Febrero 2026',
           bullets: [
             'Integración con APIs bancarias mediante un proxy server en Fastify, responsable de autenticación y cifrado de requests y responses',
             'Implementación de idempotency keys con Redis para prevenir duplicaciones en procesos críticos de alta',
@@ -375,9 +364,8 @@ const es: CvContent = {
           ],
         },
         {
-          org: 'Banco Interfisa',
-          focus: 'Banca Empresa Web',
-          period: 'Noviembre 2024 – Abril 2025',
+          title: 'Banco Interfisa - Banca Empresa Web',
+          period: 'Noviembre 2024 - Abril 2025',
           bullets: [
             'Desarrollo frontend de flujos de alta complejidad en banca empresarial: pagos de préstamos, historial de comprobantes y gestión de proveedores',
           ],
@@ -385,8 +373,8 @@ const es: CvContent = {
       ],
     },
     {
-      company: 'Freelance',
-      period: 'Junio 2021 – Noviembre 2024',
+      title: 'Freelance',
+      period: 'Junio 2021 - Noviembre 2024',
       bullets: [
         'Integración de pasarelas de pago (Stripe, Bancard, Pagopar) en aplicaciones de clientes, incluyendo flujos de checkout y webhooks de confirmación de pago',
         'Desarrollo de soluciones web para clientes bajo acuerdos de confidencialidad, con React, Next.js y Node.js en proyectos de distintos dominios',
@@ -465,8 +453,8 @@ const es: CvContent = {
       label: 'IA e Integraciones',
       items: [
         'Claude Code',
-        'Google Gemini API',
-        'Orquestación de agentes de IA',
+        'API de Google Gemini',
+        'orquestación de agentes de IA',
         'Stripe',
         'Bancard',
         'Pagopar',
@@ -478,7 +466,7 @@ const es: CvContent = {
     { name: 'Español', level: 'Nativo' },
     { name: 'Inglés', level: 'Intermedio' },
   ],
-  references: 'Referencias a pedido.',
+  references: 'Referencias a pedido',
 };
 
 export const cv: Record<Locale, CvContent> = { en, es };
