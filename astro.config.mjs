@@ -15,5 +15,8 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
-  integrations: [sitemap()],
+  integrations: [
+    // /banner is a design utility for the LinkedIn artwork, not a public page.
+    sitemap({ filter: (page) => !page.includes('/banner') }),
+  ],
 });
